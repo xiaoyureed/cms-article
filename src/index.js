@@ -1,17 +1,36 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
+import zhCN from 'antd/es/locale/zh_CN';
+import { ConfigProvider } from 'antd';
+import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { commonRoutes } from './routers';
+import './index.less';
+
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <ConfigProvider locale={zhCN}>
+    <Router>
+      <Switch>
+        <Route path="/admin" render={(props) => {
+          // 授权检测
+          return <App {...props} />;
+        }}/>
+
+        {
+          commonRoutes.map((item, index) => {
+            return (
+              <Route key={item.pathname} path={item.pathname} component={item.component} />
+            )
+          })
+        }
+
+        {/*  配置默认 path: "/" 转到 "/admin" */}
+        <Redirect from="/" to="/admin" exact />
+        {/* 匹配不到, 转到 404 */}
+        <Redirect to="/404" />
+      </Switch>
+    </Router>
+  </ConfigProvider>,
   document.getElementById('root')
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();

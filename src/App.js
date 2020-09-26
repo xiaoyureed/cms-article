@@ -1,25 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './App.less';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { privateRoutes } from './routers';
+import BasicFrame from './components/BasicFrame';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BasicFrame>
+      <Switch>
+        {
+          // secondary route
+          privateRoutes.map(item => {
+            return (
+              // <Route key={item.pathname} path={item.pathname} component={item.component} />
+              <Route key={item.pathname} path={item.pathname} render={props => {
+                return <item.component {...props} />
+              }} />
+            )
+          })
+        }
+
+        {/* 默认路径 */}
+        <Redirect from="/admin" to={privateRoutes[0].pathname} />
+        <Redirect to="/404" />
+      </Switch>
+    </BasicFrame>
   );
 }
 
