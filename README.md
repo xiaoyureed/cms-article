@@ -1,6 +1,6 @@
 # CMS system
 
-## steps
+## libs
 
 
 ```sh
@@ -20,3 +20,7 @@ npm i -S axios
 npm i -S redux react-redux
 
 ```
+
+## mock data
+
+借助 mock.js , 或者直接 rap2.taobao.org

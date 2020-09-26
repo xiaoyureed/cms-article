@@ -1,10 +1,17 @@
 import React, { Component } from 'react'
 import { Layout, Menu } from 'antd';
-import { SettingOutlined, HomeOutlined, FileTextOutlined } from '@ant-design/icons'
-
+import {privateRoutes} from '../../routers';
+import {withRouter} from 'react-router-dom'
 const { Header, Content, Sider } = Layout;
+const topMenuItems = privateRoutes.filter(item => item.isTop === true);
 
-export default class BasicFrame extends Component {
+class BasicFrame extends Component {
+    onClickMenu = ({item, key, keyPath, domEvent}) => {
+        // console.log({item, key, keyPath, domEvent});
+
+        this.props.history.push(key);// 点击菜单, 右边内容跟着变化
+    }
+
     render() {
         return (
             <Layout style={{
@@ -19,20 +26,21 @@ export default class BasicFrame extends Component {
                 <Layout>
                     <Sider width={200} className="site-layout-background">
                         <Menu
+                            onClick={this.onClickMenu}
                             mode="inline"
-                            defaultSelectedKeys={['1']}
-                            defaultOpenKeys={['sub1']}
+                            selectedKeys={[this.props.location.pathname]}
                             style={{ height: '100%', borderRight: 0 }}
                         >
-                            <Menu.Item key="1">
-                                <HomeOutlined />
-                                Dashboard
-                                </Menu.Item>
-                            <Menu.Item key="2"><FileTextOutlined />Article management</Menu.Item>
-                            <Menu.Item key="3">
-                                <SettingOutlined />
-                                System settings
-                            </Menu.Item>
+                            {
+                                topMenuItems.map(item => {
+                                    return (
+                                        <Menu.Item key={item.pathname}>
+                                            <item.icon />
+                                            {item.title}
+                                        </Menu.Item>
+                                    );
+                                })
+                            }
                         </Menu>
                     </Sider>
                     <Layout style={{ padding: '24px' }}>
@@ -52,3 +60,6 @@ export default class BasicFrame extends Component {
         )
     }
 }
+
+// add history to this.props
+export default withRouter(BasicFrame);
